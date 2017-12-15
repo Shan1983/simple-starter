@@ -10,11 +10,13 @@ const path = require('path');
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
+const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
+
 module.exports = {
   devtool: 'eval-cheap-module-source-map',
   entry: './src/index.js',
   output: {
-    path: path.resolve(__dirname, 'public/js', 'dist/js'),
+    path: path.resolve(__dirname, 'public'),
     filename: '[name].bundle.js',
   },
   devServer: {
@@ -87,5 +89,20 @@ module.exports = {
       template: './public/index.html',
       inject: true,
     }),
+    new BrowserSyncPlugin(
+      {
+        // browse to http://localhost:3000/ during development,
+        // ./public directory is being served
+        host: 'localhost',
+        port: 3000,
+        proxy: 'http://localhost:8080/',
+      },
+      // plugin options
+      {
+        // prevent BrowserSync from reloading the page
+        // and let Webpack Dev Server take care of this
+        reload: true,
+      },
+    ),
   ],
 };
